@@ -3,9 +3,10 @@ on:
   push:
     branches:
       - '*'
-  schedule:
-    - cron: '55 1,8,15 * * *'
   workflow_dispatch:
+
+env:
+  ruby_ref: 'v3_2_2'
 
 jobs:
   ucrt:
@@ -37,7 +38,7 @@ jobs:
         run: |
           $gh = 'https://github.com'
           git clone -q --depth=1 --no-tags --branch=master  $gh/oneclick/rubyinstaller2.git ./rubyinstaller2
-          git clone -q --depth=1 --no-tags --branch=master  $gh/ruby/ruby.git               ./ruby
+          git clone -q --depth=1 --no-tags --branch=${{ env.ruby_ref }}  $gh/ruby/ruby.git  ./ruby
           cd ruby
           ruby ../git_log_utc.rb
 
