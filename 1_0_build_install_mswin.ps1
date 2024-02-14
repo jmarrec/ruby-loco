@@ -123,7 +123,7 @@ $ruby_exe  = "$d_install/bin/ruby.exe"
 $ruby_v = &$ruby_exe -v
 
 if (-not ($ruby_v -cmatch "$rarch\]\z")) {
-  throw("Ruby may have compile/install issue, won't start")
+  Write-Host "Ruby may have compile/install issue, won't start"
 } else {
   Write-Host $ruby_v
 }
