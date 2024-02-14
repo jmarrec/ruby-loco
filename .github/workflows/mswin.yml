@@ -77,6 +77,7 @@ jobs:
         run: ./cli_test_bash
 
       - name: upload asset
+        if: always()
         timeout-minutes: 5
         uses: ./.github/actions/upload-binary
         env:

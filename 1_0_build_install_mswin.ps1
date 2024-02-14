@@ -21,6 +21,8 @@ cd $PSScriptRoot
 
 (Get-Content ruby/gems/bundled_gems -raw) -replace '(?m)^syslog.+\n', '' | Set-Content ruby/gems/bundled_gems -NoNewline
 
+(Get-Content ruby/win32/Makefile.sub -raw) -replace 'LDFLAGS = -incremental:no -debug -opt:ref -opt:icf', 'LDFLAGS = -incremental:no -debug -opt:ref -opt:icf -IGNORE:4099,4049,4217,4286' | Set-Content ruby/win32/Makefile.sub -NoNewline
+
 $global:build_sys = 'mswin'
 
 . ./0_common.ps1 mswin
