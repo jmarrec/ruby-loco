@@ -8602,7 +8602,12 @@ const run = async () => {
 
     const temp = rubyPath.replace(/^\.\//, `${process.cwd()}/`)
 
-    const rubyDesc = child_process.execSync(`${temp}/bin/ruby -v`).toString().trim()
+    let rubyDesc = "Unknown version";
+    try {
+      rubyDesc = child_process.execSync(`${temp}/bin/ruby -v`).toString().trim()
+    } catch (ex) {
+      console.log("Failed to run ruby -v `ex.stdout`");
+    }
 
     console.log(`Processing ${rubyDesc}`)
 
