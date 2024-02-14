@@ -50,7 +50,7 @@ cd $d_build
 
 Time-Log "start"
 
-$cmd_config = "..\ruby\win32\configure.bat --disable-install-doc --prefix=$d_install --without-ext=+,dbm,gdbm --with-opt-dir=$d_vcpkg_install"
+$cmd_config = "..\ruby\win32\configure.bat --disable-shared --enable-static --with-static-linked-ext --enable-load-relative --disable-install-doc --prefix=$d_install --without-ext=+,dbm,gdbm --with-opt-dir=$d_vcpkg_install"
 Run $cmd_config { cmd.exe /c "$cmd_config" }
 Time-Log "configure"
 
@@ -76,6 +76,7 @@ Run "nmake 'DESTDIR=' install-nodoc" {
   $file = "$d_repo/mswin/ruby-exe.xml"
   (Get-Content $file -raw) -replace "ruby\d{3}","ruby$ruby_abi" | Set-Content $file
 
+  # Don't think that's needed when static linked?
   cd $d_install\bin\ruby_builtin_dlls
   echo "installing dll files:               From $d_vcpkg_install/bin"
   $dlls = @('libcrypto-3-x64', 'libssl-3-x64', 'ffi-8', 'readline', 'yaml', 'zlib1')
@@ -90,19 +91,22 @@ Run "nmake 'DESTDIR=' install-nodoc" {
   Copy-Item $d_vcpkg_install/bin/legacy.dll
 
   cd $d_repo
-  
-  if (Test-Path -Path $d_install/lib/x64-vcruntime140-ruby$ruby_abi-static.lib -PathType Leaf ) {
-    del $d_install\lib\x64-vcruntime140-ruby$ruby_abi-static.lib
-  }
+
+  # Delete the non-static lib?
+  # if (Test-Path -Path $d_install/lib/x64-vcruntime140-ruby$ruby_abi.lib -PathType Leaf ) {
+  #   del $d_install\lib\x64-vcruntime140-ruby$ruby_abi.lib
+  # }
   # below can't run from built Ruby, as it needs valid cert files
   ruby 1_2_post_install_common.rb run
 }
 Time-Log "make install-nodoc"
 
+# Don't think that's needed when static linked?
 Run "manifest ruby.exe, rubyw.exe" {
   cd $d_install\bin
-  mt.exe -manifest $d_repo\mswin\ruby-exe.xml -outputresource:ruby.exe;1
-  mt.exe -manifest $d_repo\mswin\ruby-exe.xml -outputresource:rubyw.exe;1
+  Copy-Item $d_repo/mswin/ruby-exe.xml
+  # mt.exe -manifest $d_repo\mswin\ruby-exe.xml -outputresource:ruby.exe;1
+  # mt.exe -manifest $d_repo\mswin\ruby-exe.xml -outputresource:rubyw.exe;1
 }
 Time-Log "manifest ruby.exe, rubyw.exe"
 

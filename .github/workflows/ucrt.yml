@@ -90,6 +90,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           ruby_path: ./${{ env.PRE }}
+          release_tag: ruby-static
 
       - name: save log artifact
         if: success() || failure()
